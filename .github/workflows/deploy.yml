@@ -10,26 +10,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+
       - name: Debug EC2 User and Host
         run: |
-        echo "EC2 User: ${{ secrets.EC2_USER }}"
-        echo "EC2 Host: ${{ secrets.EC2_HOST }}"
+          echo "EC2 User: ${{ secrets.EC2_USER }}"
+          echo "EC2 Host: ${{ secrets.EC2_HOST }}"
 
-      #- name: Checkout repository
-       # uses: actions/checkout@v3
+      - name: Copy script to EC2
+        run: |
+          scp script.sh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/home/${{ secrets.EC2_USER }}/
 
-      #- name: Set up SSH key
-       # run: |
-        #  set -x
-         # mkdir -p ~/.ssh
-          #echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
-         # chmod 600 ~/.ssh/id_rsa
-         # ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
-
-      #- name: Copy script to EC2
-       # run: |
-        #  scp script.sh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/home/${{ secrets.EC2_USER }}/
-
-      #- name: Execute script on EC2
-       # run: |
-        #  ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} "chmod +x /home/${{ secrets.EC2_USER }}/script.sh && /home/${{ secrets.EC2_USER }}/script.sh"
+      - name: Execute script on EC2
+        run: |
+          ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} "chmod +x /home/${{ secrets.EC2_USER }}/script.sh && /home/${{ secrets.EC2_USER }}/script.sh"
