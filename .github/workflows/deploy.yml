@@ -18,12 +18,14 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Debug EC2 User and Host
+      - name: Debug EC2 Host
         run: |
-          echo "EC2 User: ${{ secrets.EC2_USER }}"
           echo "EC2 Host: ${{ secrets.EC2_HOST }}"
+
+      - name: Add EC2 host to known hosts
+        run: |
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
       - name: Copy script to EC2
         run: |
