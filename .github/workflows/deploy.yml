@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Debug EC2 User and Host
-         run: |
+        run: |
         echo "EC2 User: ${{ secrets.EC2_USER }}"
         echo "EC2 Host: ${{ secrets.EC2_HOST }}"
 
