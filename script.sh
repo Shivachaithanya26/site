@@ -23,7 +23,7 @@ echo "Sample files created inside '$TARGET_PATH'."
 echo "This is file1" > "$TARGET_PATH/file1.txt"
 echo "This is file2" > "$TARGET_PATH/file2.txt"
 echo "This is file3" > "$TARGET_PATH/file3.txt"
-echo "Content added to files."
+echo "Content"
 
 # List the contents of the directory
 ls -l "$TARGET_PATH"
